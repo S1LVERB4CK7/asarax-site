@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apply — ASARAX</title>
+  <title>Solicitar Chamada — ASARAX</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,51 +19,51 @@
   </header>
 
   <section class="section">
-    <h2>Apply for a Strategy Call</h2>
+    <h2>Solicitar uma Chamada Estratégica</h2>
 
     <p style="max-width:600px;margin-bottom:40px;">
-      This application helps us understand your business and determine if ASARAX
-      is the right fit for your growth stage.
+      Este formulário nos ajuda a entender seu negócio e avaliar se a ASARAX
+      é a solução certa para o seu momento de crescimento.
     </p>
 
     <form
-  class="asarax-form"
-  id="applyForm"
-  action="https://script.google.com/macros/s/AKfycbye2FA6gVzEsQKj_Jejv7YBBNjl0eqcX1uDG61l5vY3VFh6Dg-8TPKNW_DNnC2pvSoaYQ/exec"
-  method="POST"
-  target="hidden_iframe"
->
-  <div class="form-group">
-    <label>Full Name</label>
-    <input type="text" name="name" required />
-  </div>
+      class="asarax-form"
+      id="applyForm"
+      action="https://script.google.com/macros/s/AKfycbye2FA6gVzEsQKj_Jejv7YBBNjl0eqcX1uDG61l5vY3VFh6Dg-8TPKNW_DNnC2pvSoaYQ/exec"
+      method="POST"
+      target="hidden_iframe"
+    >
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" name="name" required />
+      </div>
 
-  <div class="form-group">
-    <label>Email Address</label>
-    <input type="email" name="email" required />
-  </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" name="email" required />
+      </div>
 
-  <div class="form-group">
-    <label>WhatsApp Number</label>
-    <input type="tel" name="phone" required />
-  </div>
+      <div class="form-group">
+        <label>WhatsApp</label>
+        <input type="tel" name="phone" required />
+      </div>
 
-  <div class="form-group">
-    <label>Company Name</label>
-    <input type="text" name="company" />
-  </div>
+      <div class="form-group">
+        <label>Nome da empresa</label>
+        <input type="text" name="company" />
+      </div>
 
-  <button type="submit" class="btn primary">
-    Submit Application
-  </button>
+      <button type="submit" class="btn primary">
+        Enviar solicitação
+      </button>
 
-  <p style="opacity:.5;font-size:.75rem;margin-top:20px;">
-    We review every application manually.
-  </p>
-</form>
+      <p style="opacity:.5;font-size:.75rem;margin-top:20px;">
+        Todas as solicitações são analisadas manualmente.
+      </p>
+    </form>
 
-<!-- iframe invisível: envia pro Google sem sair da página -->
-<iframe name="hidden_iframe" style="display:none;"></iframe>
+    <!-- iframe invisível: envia pro Google sem sair da página -->
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
   </section>
 
   <script src="js/apply.js"></script>
