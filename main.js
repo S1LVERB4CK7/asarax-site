@@ -1,35 +1,102 @@
-// espaço para animações, scroll effects e integrações futuras
-console.log("ASARAX ready.");    
 /* ============================
-   ASARAX — MICROINTERAÇÕES IA
-   Vanilla JS | Production Ready
-============================ */
+   ASARAX — CORE SCRIPT FINAL
+   ============================ */
 
 /* ============================
    CONFIG
 ============================ */
 const ASARAX_CONFIG = {
   enableCTAIntelligence: true,
-  enableCardInteraction: true,
   enableAttentionMessage: true,
   attentionDelay: 20000 // 20s
 };
 
 /* ============================
-   CTA "INTELIGENTE"
+   HEADER SCROLL
+============================ */
+const hdr = document.getElementById('hdr');
+if (hdr) {
+  window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', scrollY > 60);
+  }, { passive: true });
+}
+
+/* ============================
+   REVEAL ON SCROLL
+============================ */
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('on');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ============================
+   COUNTER ANIMATION
+============================ */
+function count(el, target, suffix = '', dur = 1800) {
+  const start = performance.now();
+
+  const tick = now => {
+    const progress = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+
+    el.textContent = Math.round(ease * target) + suffix;
+
+    if (progress < 1) requestAnimationFrame(tick);
+  };
+
+  requestAnimationFrame(tick);
+}
+
+const statsObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('[data-target]').forEach(el => {
+        count(el, +el.dataset.target, el.dataset.suffix || '');
+      });
+
+      statsObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+const statsBar = document.querySelector('.stats-bar');
+if (statsBar) statsObserver.observe(statsBar);
+
+/* ============================
+   SMOOTH SCROLL
+============================ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+/* ============================
+   CTA INTELIGENTE (OURO)
 ============================ */
 if (ASARAX_CONFIG.enableCTAIntelligence) {
-  const ctaButtons = document.querySelectorAll('.btn.primary');
+  const ctas = document.querySelectorAll('.btn.primary');
 
-  ctaButtons.forEach(btn => {
-    const originalText = btn.textContent;
+  ctas.forEach(btn => {
+    const original = btn.textContent;
 
     btn.addEventListener('mouseenter', () => {
       btn.textContent = 'Analyzing availability...';
     });
 
     btn.addEventListener('mouseleave', () => {
-      btn.textContent = originalText;
+      btn.textContent = original;
     });
 
     btn.addEventListener('click', () => {
@@ -44,58 +111,13 @@ if (ASARAX_CONFIG.enableCTAIntelligence) {
 }
 
 /* ============================
-   CARDS REATIVOS (SISTEMA VIVO)
-============================ */
-if (ASARAX_CONFIG.enableCardInteraction) {
-  const cards = document.querySelectorAll('.card');
-
-  cards.forEach(card => {
-    let rafId = null;
-
-    const onMove = e => {
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const rotateX = ((y - rect.height / 2) / rect.height) * 8;
-        const rotateY = ((x - rect.width / 2) / rect.width) * -8;
-
-        card.style.transform = `
-          perspective(800px)
-          rotateX(${rotateX}deg)
-          rotateY(${rotateY}deg)
-          translateY(-4px)
-        `;
-
-        rafId = null;
-      });
-    };
-
-    const reset = () => {
-      card.style.transform = `
-        perspective(800px)
-        rotateX(0deg)
-        rotateY(0deg)
-        translateY(0)
-      `;
-    };
-
-    card.addEventListener('mousemove', onMove);
-    card.addEventListener('mouseleave', reset);
-  });
-}
-
-/* ============================
-   MENSAGEM CONTEXTUAL POR ATENÇÃO
+   MENSAGEM DE ATENÇÃO (OURO)
 ============================ */
 if (ASARAX_CONFIG.enableAttentionMessage) {
-  let messageShown = false;
+  let shown = false;
 
   setTimeout(() => {
-    if (messageShown) return;
+    if (shown) return;
 
     const msg = document.createElement('div');
     msg.textContent = 'High-growth companies usually start here.';
@@ -126,38 +148,114 @@ if (ASARAX_CONFIG.enableAttentionMessage) {
 
     setTimeout(() => {
       msg.style.opacity = '0';
-      msg.style.transform = 'translateY(10px)';
+      msg.style.transform = 'translateY(10px)');
       setTimeout(() => msg.remove(), 600);
     }, 8000);
 
-    messageShown = true;
+    shown = true;
   }, ASARAX_CONFIG.attentionDelay);
 }
 
 /* ============================
-   SCROLL AWARENESS (INTENÇÃO)
+   PHONE MASK
 ============================ */
-const sections = document.querySelectorAll('.section');
-const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  },
-  { threshold: 0.15 }
-);
+const inputTel = document.getElementById('inputTel');
 
-sections.forEach(section => {
-  section.style.opacity = '0';
-  section.style.transform = 'translateY(20px)';
-  observer.observe(section);
+if (inputTel) {
+  inputTel.addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '').slice(0, 11);
+
+    if (v.length > 10) {
+      v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+    } else if (v.length > 6) {
+      v = v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+    } else if (v.length > 2) {
+      v = v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+    } else if (v.length > 0) {
+      v = v.replace(/^(\d*)$/, '($1');
+    }
+
+    this.value = v;
+  });
+}
+
+/* ============================
+   VALIDATION
+============================ */
+function setError(fieldId, hasError) {
+  const f = document.getElementById(fieldId);
+  if (!f) return;
+
+  if (hasError) f.classList.add('has-error');
+  else f.classList.remove('has-error');
+}
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+function validatePhone(phone) {
+  return phone.replace(/\D/g, '').length >= 10;
+}
+
+/* ============================
+   FORM SUBMIT
+============================ */
+function handleSubmit() {
+  const nome  = document.getElementById('inputNome').value.trim();
+  const email = document.getElementById('inputEmail').value.trim();
+  const tel   = document.getElementById('inputTel').value.trim();
+
+  let valid = true;
+
+  if (!nome) { setError('fieldNome', true); valid = false; } else setError('fieldNome', false);
+  if (!validateEmail(email)) { setError('fieldEmail', true); valid = false; } else setError('fieldEmail', false);
+  if (!validatePhone(tel)) { setError('fieldTel', true); valid = false; } else setError('fieldTel', false);
+
+  if (!valid) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const msg = encodeURIComponent(
+`Olá, me chamo ${nome}.
+Tenho interesse nos serviços da ASARAX.
+
+Email: ${email}
+Telefone: ${tel}`
+  );
+
+  const wppURL = `https://wa.me/5514991081875?text=${msg}`;
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+
+    document.querySelector('.form-tag')?.style.display = 'none';
+    document.querySelector('.form-title')?.style.display = 'none';
+    document.querySelector('.form-desc')?.style.display = 'none';
+    document.querySelector('.field-group')?.style.display = 'none';
+    btn.style.display = 'none';
+    document.querySelector('.form-note')?.style.display = 'none';
+
+    const successEl = document.getElementById('formSuccess');
+    document.getElementById('successWppLink').href = wppURL;
+
+    if (successEl) successEl.style.display = 'flex';
+
+  }, 900);
+}
+
+/* ============================
+   ENTER KEY SUBMIT
+============================ */
+document.querySelectorAll('#formWrap input').forEach(inp => {
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit();
+  });
 });
 
 /* ============================
-   DEBUG (REMOVER EM PROD SE QUISER)
+   DEBUG
 ============================ */
-console.log('ASARAX micro-interactions loaded.');
+console.log('ASARAX FULL SCRIPT READY 🚀');
